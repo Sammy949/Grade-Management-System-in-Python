@@ -1,20 +1,18 @@
-# https://samy01.netlify.app
-# This is a python project done by Samuel Yahaya, 
-# Mr Lasisi; and 
-# some other students of the Peakfield Academy Geek Club
+import os
 
 print('Hello, this is a grading system by SamY in co-operation with Mr Lasisi and some PFA students')
 print("It uses the 100% scoring system")
 
-name = input("Enter your name: ") # This asks for input of user name
+name = input("Enter your name: ")
+numsub = int(input("Enter number of subjects: "))
 
-numsub = int(input("Enter number of subjects: ")) 
-# This asks for input of number of subjects that will be inputed
-# This will be a counter for the number of times the loop will run
+data_dir = os.path.join(os.getcwd(), name)
+os.makedirs(data_dir, exist_ok=True)
 
 def details():
     print("---------------------------------------")
     subname = input("Enter name of subject: ")
+    return subname
 
 def val():
     ca1 = int(input("Enter your First CAT: "))
@@ -51,30 +49,44 @@ def val():
     while subscore > 100:
         print("This score is invalid")
 
+    grade = ""
     if subscore == 100:
-        print(name + ", Congratulations! This is an outstanding performance. " + "Your total is", subscore)
+        grade = "Outstanding"
     elif subscore >= 80:
-        print(name + ", You got an A. " + "Your total is", subscore)
+        grade = "A"
     elif subscore >= 70:
-        print(name + ", You got a B. " + "Your total is", subscore)
+        grade = "B"
     elif subscore >= 60:
-        print(name + ", You got a C. " + "Your total is", subscore)
+        grade = "C"
     elif subscore >= 50:
-        print(name + ", You got a D. " + "Your total is", subscore)
+        grade = "D"
     elif subscore >= 40:
-        print(name + ", You got a P. " + "Your total is", subscore)
+        grade = "P"
     else:
-        print(name + ", You have failed. " + "Your total is", subscore)
+        grade = "F"
 
+    return {"ca1": ca1, "ca2": ca2, "exam": exam, "subscore": subscore, "grade": grade}
+
+
+data = []
 
 for x in range(numsub):
-    details()
-    val()
-    x = x - 1
-# This for loop runs through the details function, the val function 
-# When it is done, it minuses one from x
+    subname = details()
+    subdata = val()
+    subdata["subject"] = subname
+    data.append(subdata)
+    print(f"{name}, your {subname} grade is {subdata['grade']} with a total score of {subdata['subscore']}")
+
+with open(os.path.join(data_dir, "data.txt"), "w") as f:
+    for subdata in data:
+        f.write(f"Subject: {subdata['subject']}\n")
+        f.write(f"First CAT: {subdata['ca1']}\n")
+        f.write(f"Second CAT: {subdata['ca2']}\n")
+        f.write(f"Exam score: {subdata['exam']}\n")
+        f.write(f"Total score: {subdata['subscore']}\n")
+        f.write(f"Grade: {subdata['grade']}\n")
+        f.write("------------------------------\n")
 
 print("-------------------------------------------")
 print("Thanks for trying it out. ")
 print("Done by Samuel Yahaya, Mr Lasisi, and some students in PFA Geek Club")
-print("Check out SamY's Website (https://samy01.netlify.app). Thanks")
